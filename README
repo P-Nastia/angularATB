@@ -1,0 +1,12 @@
+npm install -g @angular/cli       (для створення глобально)
+ng new my-angular        (для створення проекту)
+cd my-angular            (перейти в папку)
+ng serve           (для запуску проекту локально)
+ng build        (для того, щоби збілдити проект для глобального виставлення в інтернет) (publish в папку dist)
+
+my-angular/dist/my-angular/browse
+open with VS Code
+index.html -> go live (через live stream)
+
+main.ts — проводиться там запуск проекту
+app.ts — import компонентів з іншої бібліотеки
