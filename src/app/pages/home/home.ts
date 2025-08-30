@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CategoryService} from '../../services/category.service';
 import {Category} from '../../models/Category';
 import {CommonModule} from '@angular/common';
+import {environment} from '../../../envs/environment';
 
 @Component({
   selector: 'app-home',
@@ -29,4 +30,6 @@ export class Home implements OnInit{
       console.log( "Categories ", categories ); // subscribe = виходить promise, який повертає список категорій
    });
  }
+
+  protected readonly environment = environment;
 }

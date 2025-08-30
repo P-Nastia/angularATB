@@ -8,7 +8,7 @@
 <div class="row" *ngIf="categories.length > 0">
   <div *ngFor="let category of categories" class="col-md-3 mb-4">
     <div class="card h-100 shadow-sm">
-      <img [src]="category.image" [alt]="category.name" class="card-img-top" style="height: 200px; object-fit: cover;">
+      <img [src]=`${environment.imageUrl}800_${category.image}` [alt]="category.name" class="card-img-top" style="height: 200px; object-fit: cover;">
       <div class="card-body text-center">
         <h5 class="card-title">{{ category.name }}</h5>
       </div>
