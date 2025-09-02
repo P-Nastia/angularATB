@@ -5,8 +5,8 @@ export interface Category{
   image: string;
 }
 
-export interface CreateCategory {
+export interface ICategoryCreate {
   name: string;
-  image: string;
   slug: string;
+  imageFile?: File | null;
 }
