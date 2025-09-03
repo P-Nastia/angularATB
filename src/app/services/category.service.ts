@@ -20,4 +20,8 @@ export class CategoryService {
      return this.http.post(environment.apiUrl + 'categories/create', formData)
    }
 
+   deleteCategory(id: number) {
+    return this.http.delete(environment.apiUrl + `categories/${id}`);
+   }
+
 }
