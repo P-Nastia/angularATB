@@ -20,7 +20,7 @@ export class Home implements OnInit{
 
   //list of categories
   categories: Category[] = [];
-  selectedCategory: {id: number; name: string} | null = null;
+  selectedCategoryId: number | -1 = -1;
 
   @ViewChild('confirmModal') confirmModal!: ConfirmModal;
 
@@ -38,17 +38,16 @@ export class Home implements OnInit{
    });
  }
 
-  requestCategoryDelete(category: { id: number; name: string }) {
-    this.selectedCategory = category;
-    console.log("Opening modal", this.selectedCategory);
-    this.confirmModal.openModal(this.selectedCategory);
+  requestCategoryDelete( id: number) {
+    this.selectedCategoryId = id;
+    this.confirmModal.openModal();
   }
 
-  onCategoryDeleteConfirmed(category: { id: number; name: string }) {
-    console.log('User confirmed delete for:', category);
-    this.categoryService.deleteCategory(category.id).subscribe({
+  onCategoryDeleteConfirmed() {
+    console.log('User confirmed delete for:', this.selectedCategoryId);
+    this.categoryService.deleteCategory(this.selectedCategoryId).subscribe({
       next: () => {
-        this.categories = this.categories.filter(cat => cat.id !== category.id);
+        this.categories = this.categories.filter(cat => cat.id !== this.selectedCategoryId);
       },
       error: (err) => {
         console.error('Error occurred while deleting category', err);

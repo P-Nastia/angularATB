@@ -12,7 +12,6 @@ declare var bootstrap: any;
 export class ConfirmModal {
   @Input() message = '';
   @Input() title = '';
-  @Input() data: any;
   @Output() confirmed = new EventEmitter<any>();
 
   @ViewChild('modalRef') modalRef!: ElementRef;
@@ -26,9 +25,8 @@ export class ConfirmModal {
     }
   }
 
-  openModal(data: any) {
-    this.data = data;
-    console.log('Modal opened data',this.data);
+  openModal() {
+
     if(!this.modalInstance) {
       this.modalRef = new bootstrap.Modal(this.modalRef.nativeElement);
     }
@@ -40,7 +38,7 @@ export class ConfirmModal {
   }
 
   confirmModal(){
-    this.confirmed.emit(this.data);
+    this.confirmed.emit();
     this.closeModal();
   }
 }
