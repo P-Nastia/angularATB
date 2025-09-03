@@ -17,7 +17,7 @@ import {serialize} from 'object-to-formdata';
   styleUrls: ['./create.css']
 })
 export class CategoryCreate {
-  category: ICategoryCreate = { name: '', slug: '' };
+
   imagePreview: string | ArrayBuffer | null = null;
   //selectedFile?: File;
   //errorMessage: string | null = null;

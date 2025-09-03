@@ -20,6 +20,15 @@ export class CategoryService {
      return this.http.post(environment.apiUrl + 'categories/create', formData)
    }
 
+   getCategoryById(id: number): Observable<Category> {
+    return this.http.get<Category>(environment.apiUrl + `categories/${id}`);
+   }
+
+   updateCategory(formData: FormData) {
+    console.log("formData edit",formData.values());
+    return this.http.put(environment.apiUrl + 'categories/edit', formData)
+   }
+
    deleteCategory(id: number) {
     return this.http.delete(environment.apiUrl + `categories/${id}`);
    }

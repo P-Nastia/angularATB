@@ -1,4 +1,4 @@
-<h1 class="text-center">Створення категорії</h1>
+<h1 class="text-center">Редагування категорії</h1>
 
 <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="col-md-6 offset-md-3">
   <div class="mb-3">
@@ -28,9 +28,10 @@
       style="height: 200px; object-fit: cover; max-width: 100%;">
   </div>
 
-<!--  <div *ngIf="errorMessage" class="alert alert-danger mt-3">-->
-<!--    {{ errorMessage }}-->
-<!--  </div>-->
+  <!--  <div *ngIf="errorMessage" class="alert alert-danger mt-3">-->
+  <!--    {{ errorMessage }}-->
+  <!--  </div>-->
 
-  <button type="submit" class="btn btn-primary w-100" [disabled]="categoryForm.invalid">Створити</button>
+  <button type="submit" class="btn btn-primary w-100" [disabled]="categoryForm.invalid">Редагувати</button>
 </form>
+

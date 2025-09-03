@@ -10,3 +10,11 @@ export interface ICategoryCreate {
   slug: string;
   imageFile?: File | null;
 }
+
+export interface ICategoryEdit {
+  id: number;
+  name: string;
+  slug: string;
+  imageFile?: File | null;
+}
+
