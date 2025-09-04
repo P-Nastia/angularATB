@@ -5,6 +5,7 @@ import {CategoryService} from '../../../services/category.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {serialize} from 'object-to-formdata';
 import {environment} from '../../../../environments/environment';
+import {LoadingOverlay} from '../../../components/loading-overlay/loading-overlay';
 
 @Component({
   selector: 'app-edit',
@@ -12,7 +13,8 @@ import {environment} from '../../../../environments/environment';
     FormsModule,
     NgIf,
     ReactiveFormsModule,
-    NgForOf
+    NgForOf,
+    LoadingOverlay
   ],
   templateUrl: './edit.html',
   styleUrl: './edit.css'
@@ -22,6 +24,7 @@ export class CategoryEdit implements OnInit {
   categoryForm: FormGroup;
   imagePreview: string | Array<string> | null = null;
   categoryId!: number;
+  loading: boolean = false;
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -79,14 +82,17 @@ export class CategoryEdit implements OnInit {
   }
 
   onSubmit(): void {
+    this.loading = true;
     if(this.categoryForm.invalid) {
+      this.loading = false;
       return;
     }
 
     const formData = serialize(this.categoryForm.value);
     this.categoryService.updateCategory(formData).subscribe({
-      next: () => {this.router.navigate(['/'])},
+      next: () => {this.loading = false; this.router.navigate(['/'])},
       error: (err) => {
+        this.loading = false;
         console.error(err);
         if(err.status === 400 && err.error?.errors){
           const {errors} = err.error;

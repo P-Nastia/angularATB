@@ -1,23 +1,24 @@
 import { Component } from '@angular/core';
-import { ICategoryCreate } from '../../../models/Category';
 import { CategoryService } from '../../../services/category.service';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import { Router } from '@angular/router';
 import {serialize} from 'object-to-formdata';
+import {LoadingOverlay} from '../../../components/loading-overlay/loading-overlay';
 
 @Component({
   selector: 'app-create',
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    LoadingOverlay
   ],
   templateUrl: './create.html',
   styleUrls: ['./create.css']
 })
 export class CategoryCreate {
-
+  loading: boolean = false;
   imagePreview: string | ArrayBuffer | null = null;
 
   categoryForm: FormGroup;
@@ -55,9 +56,8 @@ export class CategoryCreate {
 
   onSubmit() {
 
-
     console.log("form value",this.categoryForm.value);
-
+    this.loading = true;
     const formData=serialize(this.categoryForm.value);
     console.log("formData",formData.values())
 
@@ -65,9 +65,11 @@ export class CategoryCreate {
       next: (res) => {
         console.log('Created:', res);
         this.imagePreview = null;
+        this.loading = false;
         this.router.navigate(['/']);
       },
       error: (err) => {
+        this.loading = false;
         console.error(err);
         if(err.status === 400 && err.error?.errors){
           const {errors} = err.error;
