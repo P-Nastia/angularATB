@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {CategoryService} from '../../../services/category.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {serialize} from 'object-to-formdata';
@@ -8,11 +8,12 @@ import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-edit',
-    imports: [
-        FormsModule,
-        NgIf,
-        ReactiveFormsModule
-    ],
+  imports: [
+    FormsModule,
+    NgIf,
+    ReactiveFormsModule,
+    NgForOf
+  ],
   templateUrl: './edit.html',
   styleUrl: './edit.css'
 })
@@ -30,7 +31,7 @@ export class CategoryEdit implements OnInit {
       id:[-1],
       name: ['', Validators.required],
       slug: ['', Validators.required],
-      imageFile: [null, Validators.required],
+      imageFile: [null],
     })
   }
   ngOnInit(): void {
@@ -58,22 +59,23 @@ export class CategoryEdit implements OnInit {
 
     onFileSelected(event: any) {
     const file = event.target.files[0];
-    if (!file.type.startsWith('image/')) {
-      alert("Оберіть фото!");
-      return;
-    }
-    if (file) {
-      this.categoryForm.patchValue({
-        imageFile: file,
-      })
-      this.categoryForm.get('imageFile')?.updateValueAndValidity();
-
-      this.imagePreview = URL.createObjectURL(file);
-    } else {
-      this.categoryForm.patchValue({
-        imageFile: null,
-      })
-    }
+      if(file) {
+        if (!file.type.startsWith('image/')) {
+          alert("Оберіть фото!");
+          return;
+        }
+        this.categoryForm.patchValue({
+          imageFile: file
+        });
+        this.categoryForm.get('imageFile')?.updateValueAndValidity();
+        this.imagePreview = URL.createObjectURL(file);
+      }
+      else {
+        this.categoryForm.patchValue({
+          imageFile: null
+        });
+        this.imagePreview = null;
+      }
   }
 
   onSubmit(): void {
@@ -85,7 +87,18 @@ export class CategoryEdit implements OnInit {
     this.categoryService.updateCategory(formData).subscribe({
       next: () => {this.router.navigate(['/'])},
       error: (err) => {
-        console.error('Error updating category', err)
+        console.error(err);
+        if(err.status === 400 && err.error?.errors){
+          const {errors} = err.error;
+
+          Object.keys(errors).forEach(key => {
+            const control=this.categoryForm.get(key.charAt(0).toLowerCase() + key.slice(1));
+
+            if(control){
+              control.setErrors({serverError: errors[key]});
+            }
+          })
+        }
       }
 
     })

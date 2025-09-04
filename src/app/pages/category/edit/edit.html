@@ -5,19 +5,38 @@
     <label for="name" class="form-label">Name</label>
     <input type="text" formControlName="name" class="form-control" id="name">
 
+    <div class="text-danger" *ngIf="categoryForm.get('name')?.errors as errors">
+      <div *ngIf="errors['required']
+      && (categoryForm.get('name')?.touched || categoryForm.get('name')?.dirty)">Name is required</div>
+      <div *ngIf="errors['serverError']">
+        <div *ngFor="let error of errors['serverError']">{{ error }}</div>
+      </div>
+    </div>
   </div>
 
   <div class="mb-3">
     <label for="slug" class="form-label">Slug</label>
     <input type="text" formControlName="slug" class="form-control" id="slug">
+
+    <div class="text-danger" *ngIf="categoryForm.get('slug')?.errors as errors">
+      <div *ngIf="errors['required']
+        && (categoryForm.get('slug')?.touched || categoryForm.get('slug')?.dirty)">Slug is required</div>
+      <div *ngIf="errors['serverError']">
+        <div *ngFor="let error of errors['serverError']">{{ error }}</div>
+      </div>
+    </div>
   </div>
 
   <div class="mb-3">
     <label for="image" class="form-label">Image</label>
     <input type="file" (change)="onFileSelected($event)" class="form-control" id="image">
 
-    <div *ngif="categoryForm.get('imageFile')?.invalid && categoryForm.get('imageFile')?.touched" class="text-danger">
-      Фото є обов'язковим
+    <div class="text-danger" *ngIf="categoryForm.get('imageFile')?.errors as errors">
+      <div *ngIf="errors['required']
+        && (categoryForm.get('imageFile')?.touched || categoryForm.get('imageFile')?.dirty)">Image file is required</div>
+      <div *ngIf="errors['serverError']">
+        <div *ngFor="let error of errors['serverError']">{{ error }}</div>
+      </div>
     </div>
   </div>
 
@@ -28,10 +47,5 @@
       style="height: 200px; object-fit: cover; max-width: 100%;">
   </div>
 
-  <!--  <div *ngIf="errorMessage" class="alert alert-danger mt-3">-->
-  <!--    {{ errorMessage }}-->
-  <!--  </div>-->
-
-  <button type="submit" class="btn btn-primary w-100" [disabled]="categoryForm.invalid">Редагувати</button>
+  <button type="submit" class="btn btn-primary w-100" >Редагувати</button>
 </form>
-
