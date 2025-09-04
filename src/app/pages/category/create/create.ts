@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ICategoryCreate } from '../../../models/Category';
 import { CategoryService } from '../../../services/category.service';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import {CommonModule} from '@angular/common';
 import { Router } from '@angular/router';
 import {serialize} from 'object-to-formdata';
 
@@ -19,8 +19,6 @@ import {serialize} from 'object-to-formdata';
 export class CategoryCreate {
 
   imagePreview: string | ArrayBuffer | null = null;
-  //selectedFile?: File;
-  //errorMessage: string | null = null;
 
   categoryForm: FormGroup;
 
@@ -36,30 +34,27 @@ export class CategoryCreate {
 
   onFileSelected(event: any) {
     const file= event.target.files[0];
-    if(!file.type.startsWith('image/')){
-      alert("Оберіть фото!");
-      return;
-    }
-    if(file){
+    if(file) {
+      if (!file.type.startsWith('image/')) {
+        alert("Оберіть фото!");
+        return;
+      }
       this.categoryForm.patchValue({
-        imageFile: file,
-      })
+        imageFile: file
+      });
       this.categoryForm.get('imageFile')?.updateValueAndValidity();
-
       this.imagePreview = URL.createObjectURL(file);
     }
-    else{
+    else {
       this.categoryForm.patchValue({
-        imageFile: null,
-      })
+        imageFile: null
+      });
+      this.imagePreview = null;
     }
   }
 
   onSubmit() {
-    if(this.categoryForm.invalid) {
-      console.log("INVALID Category form");
-      return;
-    }
+
 
     console.log("form value",this.categoryForm.value);
 
@@ -69,14 +64,22 @@ export class CategoryCreate {
     this.categoryService.createCategory(formData).subscribe({
       next: (res) => {
         console.log('Created:', res);
-        //this.category = { name: '', slug: '', imageFile: '' };
-        //this.selectedFile = undefined;
         this.imagePreview = null;
         this.router.navigate(['/']);
       },
       error: (err) => {
         console.error(err);
-        //this.errorMessage = err.error?.message || 'Error, check all fields';
+        if(err.status === 400 && err.error?.errors){
+          const {errors} = err.error;
+
+          Object.keys(errors).forEach(key => {
+            const control=this.categoryForm.get(key.charAt(0).toLowerCase() + key.slice(1));
+
+            if(control){
+              control.setErrors({serverError: errors[key]});
+            }
+          })
+        }
       }
     });
   }

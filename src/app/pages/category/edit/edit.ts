@@ -83,7 +83,7 @@ export class CategoryEdit implements OnInit {
 
     const formData = serialize(this.categoryForm.value);
     this.categoryService.updateCategory(formData).subscribe({
-      next: (category) => {this.router.navigate(['/'])},
+      next: () => {this.router.navigate(['/'])},
       error: (err) => {
         console.error('Error updating category', err)
       }
