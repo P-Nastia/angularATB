@@ -41,6 +41,7 @@ export class CategoryEdit implements OnInit {
     })
   }
   ngOnInit(): void {
+    this.loading = true;
     this.categoryId = this.route.snapshot.params['id'];
 
     console.log("categoryId",this.categoryId);
@@ -56,12 +57,14 @@ export class CategoryEdit implements OnInit {
 
         this.imagePreview = category.image
         ? `${environment.imageUrl}800_${category.image}`:null;
+        this.loading = false;
       },
       error: err => {
         if (err.status === 0) {
           this.isServerAccessError = true;
         }
         console.log("ERROR EDIT INITIALIZE",err);
+        this.loading = false;
       }
     })
   }
