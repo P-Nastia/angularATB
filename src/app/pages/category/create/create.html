@@ -1,4 +1,6 @@
 <h1 class="text-center">Створення категорії</h1>
+<app-server-access-error *ngIf="isServerAccessError"></app-server-access-error>
+
 
 <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="col-md-6 offset-md-3">
   <div class="mb-3">

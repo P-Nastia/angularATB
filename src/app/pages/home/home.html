@@ -1,8 +1,10 @@
 
+<app-loading-overlay [isLoading]="loading"></app-loading-overlay>
 <a class="btn btn-primary mb-3" routerLink="/category/create">Додати</a>
+<app-server-access-error *ngIf="isServerAccessError"></app-server-access-error>
 
 <!-- Перевірка, чи список категорій пустий -->
-<div *ngIf="categories.length === 0" class="alert alert-info text-center">
+<div *ngIf="categories.length === 0 && !isServerAccessError" class="alert alert-info text-center">
   Категорії наразі відсутні.
 </div>
 
@@ -40,3 +42,5 @@
 [message]="'Ви впевнені, що хочете видалити цю категорію?'"
 (confirmed)="onCategoryDeleteConfirmed()">
 </app-confirm-modal>
+
+

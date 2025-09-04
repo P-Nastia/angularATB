@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {serialize} from 'object-to-formdata';
 import {environment} from '../../../../environments/environment';
 import {LoadingOverlay} from '../../../components/loading-overlay/loading-overlay';
+import {ServerAccessError} from '../../../components/server-access-error/server-access-error';
 
 @Component({
   selector: 'app-edit',
@@ -14,7 +15,8 @@ import {LoadingOverlay} from '../../../components/loading-overlay/loading-overla
     NgIf,
     ReactiveFormsModule,
     NgForOf,
-    LoadingOverlay
+    LoadingOverlay,
+    ServerAccessError
   ],
   templateUrl: './edit.html',
   styleUrl: './edit.css'
@@ -25,6 +27,7 @@ export class CategoryEdit implements OnInit {
   imagePreview: string | Array<string> | null = null;
   categoryId!: number;
   loading: boolean = false;
+  isServerAccessError: boolean = false;
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -55,6 +58,9 @@ export class CategoryEdit implements OnInit {
         ? `${environment.imageUrl}800_${category.image}`:null;
       },
       error: err => {
+        if (err.status === 0) {
+          this.isServerAccessError = true;
+        }
         console.log("ERROR EDIT INITIALIZE",err);
       }
     })
@@ -82,6 +88,7 @@ export class CategoryEdit implements OnInit {
   }
 
   onSubmit(): void {
+    this.isServerAccessError = false;
     this.loading = true;
     if(this.categoryForm.invalid) {
       this.loading = false;
@@ -90,10 +97,16 @@ export class CategoryEdit implements OnInit {
 
     const formData = serialize(this.categoryForm.value);
     this.categoryService.updateCategory(formData).subscribe({
-      next: () => {this.loading = false; this.router.navigate(['/'])},
+      next: () => {
+        this.loading = false; this.router.navigate(['/'])
+      },
       error: (err) => {
         this.loading = false;
         console.error(err);
+
+        if (err.status === 0) {
+          this.isServerAccessError = true;
+        }
         if(err.status === 400 && err.error?.errors){
           const {errors} = err.error;
 

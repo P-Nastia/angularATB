@@ -5,6 +5,7 @@ import {CommonModule} from '@angular/common';
 import { Router } from '@angular/router';
 import {serialize} from 'object-to-formdata';
 import {LoadingOverlay} from '../../../components/loading-overlay/loading-overlay';
+import {ServerAccessError} from '../../../components/server-access-error/server-access-error';
 
 @Component({
   selector: 'app-create',
@@ -12,7 +13,8 @@ import {LoadingOverlay} from '../../../components/loading-overlay/loading-overla
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    LoadingOverlay
+    LoadingOverlay,
+    ServerAccessError
   ],
   templateUrl: './create.html',
   styleUrls: ['./create.css']
@@ -20,6 +22,7 @@ import {LoadingOverlay} from '../../../components/loading-overlay/loading-overla
 export class CategoryCreate {
   loading: boolean = false;
   imagePreview: string | ArrayBuffer | null = null;
+  isServerAccessError: boolean = false;
 
   categoryForm: FormGroup;
 
@@ -55,7 +58,7 @@ export class CategoryCreate {
   }
 
   onSubmit() {
-
+   this.isServerAccessError = false;
     console.log("form value",this.categoryForm.value);
     this.loading = true;
     const formData=serialize(this.categoryForm.value);
@@ -71,6 +74,9 @@ export class CategoryCreate {
       error: (err) => {
         this.loading = false;
         console.error(err);
+        if (err.status === 0) {
+          this.isServerAccessError = true;
+        }
         if(err.status === 400 && err.error?.errors){
           const {errors} = err.error;
 
