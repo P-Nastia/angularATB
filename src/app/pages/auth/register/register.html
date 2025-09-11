@@ -1,1 +1,88 @@
-<p>register works!</p>
+<h1 class="text-center">Створення категорії</h1>
+<app-server-access-error *ngIf="isServerAccessError"></app-server-access-error>
+
+
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="col-md-6 offset-md-3">
+
+  <div class="mb-3 text-center">
+    <label for="image" style="cursor: pointer;">
+      <img
+        [src]="imagePreview || 'https://www.freeiconspng.com/thumbs/load-icon-png/load-icon-png-6.png'"
+        alt="Profile"
+        class="rounded-circle"
+        style="height: 200px; width: 200px; object-fit: cover;">
+    </label>
+
+    <input
+      type="file"
+      (change)="onFileSelected($event)"
+      class="d-none"
+      id="image">
+
+    <div class="text-danger" *ngIf="registerForm.get('imageFile')?.errors as errors">
+      <div *ngIf="errors['required']
+        && (registerForm.get('imageFile')?.touched || registerForm.get('imageFile')?.dirty)">Image file is required</div>
+      <div *ngIf="errors['serverError']">
+        <div *ngFor="let error of errors['serverError']">{{ error }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="firstName" class="form-label">First name</label>
+    <input type="text" formControlName="firstName" class="form-control" id="firstName">
+
+    <div class="text-danger" *ngIf="registerForm.get('firstName')?.errors as errors">
+      <div *ngIf="errors['required']
+      && (registerForm.get('firstName')?.touched || registerForm.get('firstName')?.dirty)">First name is required</div>
+      <div *ngIf="errors['serverError']">
+        <div *ngFor="let error of errors['serverError']">{{ error }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="lastName" class="form-label">Last name</label>
+    <input type="text" formControlName="lastName" class="form-control" id="secondName">
+
+    <div class="text-danger" *ngIf="registerForm.get('lastName')?.errors as errors">
+      <div *ngIf="errors['required']
+        && (registerForm.get('lastName')?.touched || registerForm.get('lastName')?.dirty)">Last name is required</div>
+      <div *ngIf="errors['serverError']">
+        <div *ngFor="let error of errors['serverError']">{{ error }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input type="email" formControlName="email" class="form-control" id="email">
+
+    <div class="text-danger" *ngIf="registerForm.get('email')?.errors as errors">
+      <div *ngIf="errors['required']
+        && (registerForm.get('email')?.touched || registerForm.get('email')?.dirty)">Email is required</div>
+      <div *ngIf="errors['serverError']">
+        <div *ngFor="let error of errors['serverError']">{{ error }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="password" class="form-label">Password</label>
+    <input type="password" formControlName="password" class="form-control" id="password">
+
+    <div class="text-danger" *ngIf="registerForm.get('password')?.errors as errors">
+      <div *ngIf="errors['required']
+        && (registerForm.get('password')?.touched || registerForm.get('password')?.dirty)">Password is required</div>
+      <div *ngIf="errors['serverError']">
+        <div *ngFor="let error of errors['serverError']">{{ error }}</div>
+      </div>
+    </div>
+  </div>
+
+
+  <button type="submit" class="btn btn-primary w-100" >Створити</button>
+</form>
+
+<app-loading-overlay [isLoading]="loading"></app-loading-overlay>
+

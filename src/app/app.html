@@ -18,9 +18,23 @@
           <li class="nav-item"><a class="nav-link active" aria-current="page" routerLink="/">Додому</a></li>
         </ul>
 
-        <ul class="navbar-nav">
-            <li class="nav-item"><a class="nav-link" aria-current="page" routerLink="/register">Реєстрація</a></li>
-            <li class="nav-item"><a class="nav-link" aria-current="page" routerLink="/login">Вхід</a></li>
+        <ul class="navbar-nav ms-auto">
+          <ng-container *ngIf="isLoggedIn() && user() as user">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
+                <img [src]=`${environment.imageUrl}800_${user.image}` class="rounded-circle " width="42" height="42" />
+                {{ user.name }}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" (click)="logout()">Вийти</a></li>
+              </ul>
+            </li>
+          </ng-container>
+
+          <ng-container *ngIf="!isLoggedIn()">
+            <li class="nav-item"><a class="nav-link" routerLink="/register">Реєстрація</a></li>
+            <li class="nav-item"><a class="nav-link" routerLink="/login">Вхід</a></li>
+          </ng-container>
         </ul>
       </div>
     </div>
